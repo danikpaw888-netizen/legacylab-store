@@ -5,14 +5,14 @@ const specs=Array.from({length:8},(_,i)=>JSON.parse(fs.readFileSync(path.join(ro
 const colors={
 bone:['Молочный','#e2dfd3'],graphite:['Графит','#30322e'],sage:['Шалфей','#858b72'],ash:['Серый меланж','#a4a5a0'],navy:['Тёмно-синий','#344453'],brown:['Песочный','#a28b6c'],lime:['Лайм','#cedc56']
 };
-const names={clothing:'Одежда',sneakers:'Кроссовки',accessories:'Аксессуары'};
+const _names={clothing:'Одежда',sneakers:'Кроссовки',accessories:'Аксессуары'};
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;');
 function svg(p,index,view,color){
 const dark=['#30322e','#344453'].includes(color),ink=dark?'#aeb2a3':'#55594e',line=dark?'#181b18':'#8c9082';
 let drawing='';
 const path=(d,extra='')=>'<path d="'+d+'" '+extra+'/>';
 const stitch=(d)=>path(d,'fill="none" stroke="'+line+'" stroke-width="2" stroke-dasharray="5 4" opacity=".65"');
-const logo=(x,y,w=38)=>'<g transform="translate('+x+' '+y+')" fill="none" stroke="'+ink+'" stroke-width="5"><path d="M0 0V28H18M20 0V28H38"/></g>';
+const logo=(x,y)=>'<g transform="translate('+x+' '+y+')" fill="none" stroke="'+ink+'" stroke-width="5"><path d="M0 0V28H18M20 0V28H38"/></g>';
 const label=(x,y)=>'<g transform="translate('+x+' '+y+')"><rect width="52" height="22" fill="'+(dark?'#cdd0c5':'#454a40')+'"/><text x="26" y="14" text-anchor="middle" font-family="Arial" font-size="7" fill="'+(dark?'#33372d':'#eee')+'" letter-spacing="1">LL / LAB</text></g>';
 const fabric='fill="url(#fabric)" stroke="'+line+'" stroke-width="2" stroke-linejoin="round"';
 if(p.subcategory==='t-shirts'){

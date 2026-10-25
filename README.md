@@ -2,6 +2,8 @@
 
 **Создавай своё наследие.** Демонстрационный магазин одежды, обуви и аксессуаров с русским интерфейсом, серверным оформлением заказа и имитацией оплаты без банковских карт.
 
+Сайт: [legacylab-store.danikpaw888.workers.dev](https://legacylab-store.danikpaw888.workers.dev). Исходники: [danikpaw888-netizen/legacylab-store](https://github.com/danikpaw888-netizen/legacylab-store).
+
 Этот репозиторий содержит приложение для Cloudflare Workers и D1. Наличие исходников и конфигурации само по себе не означает успешную публикацию: адрес работающего сайта и фактические результаты проверок фиксируются в отчёте развёртывания. Не используйте демонстрационные данные как сведения о реальном продавце, товарах или перевозчике.
 
 ## Архитектура
@@ -181,9 +183,9 @@ npx wrangler secret put RESEND_API_KEY
 
 ### Автоматическое развёртывание и preview
 
-Проверки GitHub Actions включены исходным workflow. Автоматическое развёртывание требует отдельной привязки GitHub к Workers Builds либо отдельного deploy-workflow с защищённым токеном Cloudflare. Само наличие `wrangler.jsonc` не настраивает эту связь.
+Проверки GitHub Actions включены workflow `check.yml`. Workflow `deploy.yml` запускается после успешных Checks для main и поддерживает ручной запуск. Для активации добавьте `CLOUDFLARE_API_TOKEN` в Settings → Environments → production → Secrets. Нужны права Workers Scripts Edit и D1 Edit только для целевого аккаунта; значение никогда не добавляется в исходники. При отсутствии секрета публикация пропускается с предупреждением. Проверка pull request выполняется без доступа к production-базе. Автоматическое развёртывание требует отдельной привязки GitHub к Workers Builds либо отдельного deploy-workflow с защищённым токеном Cloudflare. Само наличие `wrangler.jsonc` не настраивает эту связь.
 
-Для Workers Builds выберите приватный репозиторий, ветку `main`, установку `npm ci`, команду сборки `npm run check && node src/server/sql-check.mjs` и deploy-команду `npx wrangler deploy`. Секреты приложения задаются на Worker; токен сборок не должен попадать в Git. Миграции перед публикацией следует выполнять отдельным контролируемым шагом.
+Для Workers Builds выберите репозиторий LegacyLab, ветку `main`, установку `npm ci`, команду сборки `npm run check && node src/server/sql-check.mjs` и deploy-команду `npx wrangler deploy`. Секреты приложения задаются на Worker; токен сборок не должен попадать в Git. Миграции перед публикацией следует выполнять отдельным контролируемым шагом.
 
 Preview должен использовать **другую физическую D1**, отдельный `BASE_URL` и отдельный секрет авторизации. До настройки такого окружения запускайте для pull request только проверки. Никогда не публикуйте preview с production binding DB. Официальная схема изоляции: [Cloudflare Preview resources](https://developers.cloudflare.com/workers/previews/resources/).
 
@@ -225,3 +227,9 @@ npx wrangler d1 execute TEST_DATABASE_NAME --remote --file /secure-backups/legac
 - [D1 export](https://developers.cloudflare.com/d1/best-practices/import-export-data/)
 - [Better Auth](https://www.better-auth.com/docs)
 - [GitHub checkout](https://github.com/actions/checkout) и [setup-node](https://github.com/actions/setup-node)
+
+## Повторяемые проверки опубликованного интерфейса
+
+`public/qa-check.js` — тестовый сценарий, который сам магазин не загружает. В изолированном браузере можно явно подключить его с `?mode=layout` для геометрии или `?mode=purchase` для гостевой покупки и тестов аккаунта. Режим покупки создаёт только демонстрационный заказ и случайный тестовый аккаунт example.invalid. Итог находится в скрытом элементе `#ll-qa-report`. Не подключайте сценарий к обычным клиентским страницам.
+
+После сборки `node scripts/verify-build.mjs` проверяет production Worker, 11 страниц, HTTP-статусы, статические активы и каталог на временной локальной D1. Фактические результаты публикации фиксируются в `docs/verification.md`.
