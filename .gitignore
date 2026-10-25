@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.wrangler/
+.dev.vars
+.env
+*.log
+test-results/
+playwright-report/
+
+.npm-cache/
+src/assets.generated.ts
+write-check.txt
+
+public/images/hero.png
+scripts/patch-root.cjs
