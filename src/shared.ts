@@ -4,7 +4,7 @@ export type CartLine={variantId:string;quantity:number;price?:number};
 export type CartItem=CartLine & {product:Product;variant:Variant};
 export type ShopConfig={name:string;currency:string;locale:string;freeShippingThreshold:number;shipping:{id:string;name:string;price:number;days:string}[];contactEmail:string};
 export const defaultConfig:ShopConfig={"name":"LegacyLab","currency":"RUB","locale":"ru-RU","freeShippingThreshold":1500000,"shipping":[{"id":"standard","name":"Стандартная доставка","price":49000,"days":"3–7 дней"},{"id":"express","name":"Экспресс-доставка","price":99000,"days":"1–3 дня"}],"contactEmail":""};
-export const money=(n:number,c=defaultConfig)=>new Intl.NumberFormat(c.locale,{style:'currency',currency:c.currency,maximumFractionDigits:0}).format(n/100);
+export const money=(n:number,c=defaultConfig)=>new Intl.NumberFormat(c.locale,{style:'currency',currency:c.currency,minimumFractionDigits:n%100===0?0:2,maximumFractionDigits:2}).format(n/100);
 export type User={id:string;name:string;email:string;role?:string};
 export type OrderItem={variantId:string;name:string;slug:string;image:string;color:string;size:string;quantity:number;price:number};
 export type Order={id:string;number:string;userId:string|null;createdAt:string;status:string;paymentStatus:string;subtotal:number;discount:number;shipping:number;total:number;shippingMethod:string;contact:{name:string;email:string;phone:string;city:string;address:string;postalCode?:string;comment?:string};items:OrderItem[];history:{status:string;createdAt:string;comment?:string}[];accessToken?:string};
