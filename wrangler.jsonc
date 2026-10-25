@@ -1,0 +1,36 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "legacylab-store",
+  "main": "dist/worker.js",
+  "compatibility_date": "2026-10-25",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "workers_dev": true,
+  "vars": {
+    "BASE_URL": "https://legacylab-store.danikpaw888.workers.dev",
+    "MAIL_FROM": ""
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "legacylab-store",
+      "database_id": "1564031d-fffe-446f-9156-3f11b706867a",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "triggers": {
+    "crons": [
+      "*/15 * * * *"
+    ]
+  },
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 0.1,
+    "logs": {
+      "enabled": true,
+      "invocation_logs": false
+    },
+    "redact_query_string": true
+  }
+}
